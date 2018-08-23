@@ -1,0 +1,92 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'menu.ui'
+#
+# Created by: PyQt5 UI code generator 5.11.2
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+class Ui_Dialog(object):
+    def setupUi(self, Dialog):
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(609, 358)
+        self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.frame = QtWidgets.QFrame(Dialog)
+        self.frame.setObjectName("frame")
+        self.gridLayout = QtWidgets.QGridLayout(self.frame)
+        self.gridLayout.setObjectName("gridLayout")
+        self.checkBoxSHMPath = QtWidgets.QCheckBox(self.frame)
+        self.checkBoxSHMPath.setObjectName("checkBoxSHMPath")
+        self.gridLayout.addWidget(self.checkBoxSHMPath, 2, 0, 1, 1)
+        self.checkBoxLGPath = QtWidgets.QCheckBox(self.frame)
+        self.checkBoxLGPath.setObjectName("checkBoxLGPath")
+        self.gridLayout.addWidget(self.checkBoxLGPath, 0, 0, 1, 1)
+        self.buttonSHMPath = QtWidgets.QPushButton(self.frame)
+        self.buttonSHMPath.setObjectName("buttonSHMPath")
+        self.gridLayout.addWidget(self.buttonSHMPath, 2, 1, 1, 1)
+        self.socketLineEdit = QtWidgets.QLineEdit(self.frame)
+        self.socketLineEdit.setObjectName("socketLineEdit")
+        self.gridLayout.addWidget(self.socketLineEdit, 4, 2, 1, 1)
+        self.checkBoxSHMSize = QtWidgets.QCheckBox(self.frame)
+        self.checkBoxSHMSize.setObjectName("checkBoxSHMSize")
+        self.gridLayout.addWidget(self.checkBoxSHMSize, 3, 0, 1, 1)
+        self.memsizeSpinBox = QtWidgets.QSpinBox(self.frame)
+        self.memsizeSpinBox.setObjectName("memsizeSpinBox")
+        self.gridLayout.addWidget(self.memsizeSpinBox, 3, 2, 1, 1)
+        self.SHMPathLineEdit = QtWidgets.QLineEdit(self.frame)
+        self.SHMPathLineEdit.setObjectName("SHMPathLineEdit")
+        self.gridLayout.addWidget(self.SHMPathLineEdit, 2, 2, 1, 1)
+        self.checkBoxSpicePort = QtWidgets.QCheckBox(self.frame)
+        self.checkBoxSpicePort.setObjectName("checkBoxSpicePort")
+        self.gridLayout.addWidget(self.checkBoxSpicePort, 5, 0, 1, 1)
+        self.LGPathLineEdit = QtWidgets.QLineEdit(self.frame)
+        self.LGPathLineEdit.setObjectName("LGPathLineEdit")
+        self.gridLayout.addWidget(self.LGPathLineEdit, 0, 2, 1, 1)
+        self.checkBoxHostSocket = QtWidgets.QCheckBox(self.frame)
+        self.checkBoxHostSocket.setObjectName("checkBoxHostSocket")
+        self.gridLayout.addWidget(self.checkBoxHostSocket, 4, 0, 1, 1)
+        self.buttonLGConfig = QtWidgets.QPushButton(self.frame)
+        self.buttonLGConfig.setObjectName("buttonLGConfig")
+        self.gridLayout.addWidget(self.buttonLGConfig, 0, 1, 1, 1)
+        self.portSpinBox = QtWidgets.QSpinBox(self.frame)
+        self.portSpinBox.setMaximum(999999)
+        self.portSpinBox.setObjectName("portSpinBox")
+        self.gridLayout.addWidget(self.portSpinBox, 5, 2, 1, 1)
+        self.verticalLayout.addWidget(self.frame)
+        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(spacerItem)
+        self.frame_2 = QtWidgets.QFrame(Dialog)
+        self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_2.setObjectName("frame_2")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.frame_2)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem1)
+        self.buttonCancel = QtWidgets.QPushButton(self.frame_2)
+        self.buttonCancel.setObjectName("buttonCancel")
+        self.horizontalLayout.addWidget(self.buttonCancel)
+        self.buttonOkay = QtWidgets.QPushButton(self.frame_2)
+        self.buttonOkay.setObjectName("buttonOkay")
+        self.horizontalLayout.addWidget(self.buttonOkay)
+        self.verticalLayout.addWidget(self.frame_2)
+
+        self.retranslateUi(Dialog)
+        QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+    def retranslateUi(self, Dialog):
+        _translate = QtCore.QCoreApplication.translate
+        Dialog.setWindowTitle(_translate("Dialog", "Advanced Options"))
+        self.checkBoxSHMPath.setText(_translate("Dialog", "Custom SHM Path"))
+        self.checkBoxLGPath.setText(_translate("Dialog", "Custom LG Config"))
+        self.buttonSHMPath.setText(_translate("Dialog", "Browse"))
+        self.checkBoxSHMSize.setText(_translate("Dialog", "Specify SHM Size (MB)"))
+        self.checkBoxSpicePort.setText(_translate("Dialog", "Specify Spice Port/Socket"))
+        self.checkBoxHostSocket.setText(_translate("Dialog", "Specify Spice Host/Socket"))
+        self.buttonLGConfig.setText(_translate("Dialog", "Browse"))
+        self.buttonCancel.setText(_translate("Dialog", "Cancel"))
+        self.buttonOkay.setText(_translate("Dialog", "Okay"))
+
