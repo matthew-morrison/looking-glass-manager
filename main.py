@@ -345,6 +345,7 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
         print('Starting Subprocess')
         #print(startArguments)
         commandAsString = ' '.join(startArguments)
+        self.showCMDCommand(commandAsString)
 
         #print(type(self.lookingGlassProcess))
         # check if process never started, or if it has exited
@@ -375,6 +376,9 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
         print("click restart button")
         self.stopButton()
         self.startButton()
+
+    def showCMDCommand(self, commandText):
+        self.lineEditCMDOutput.setText(commandText)
 
     def showAdvancedOptions(self):
         print("Showing advanced options")
