@@ -34,6 +34,49 @@ options = [
 
 ]
 
+
+class AdvancedOptions(QtWidgets.QDialog, advancedmenu.Ui_Dialog):
+
+    def __init__(self, advancedSettingsDict, parent=None):
+        super(AdvancedOptions, self).__init__(parent)
+        self.setupUi(self)
+        self.advancedSettingsDict = advancedSettingsDict
+        self.buttonOkay.clicked.connect(self.exitAdvancedOptions)
+        self.buttonCancel.clicked.connect(self.exitAdvancedOptions)
+        self.populateAdvancedFromDict()  # populates options from dict
+        self.exec_()
+        self.show()
+
+    def populateAdvancedFromDict(self):
+        self.checkBoxLGPath.setChecked(self.advancedSettingsDict['UseCustomLookingGlassConfigFile'])
+        self.checkBoxSHMPath.setChecked(self.advancedSettingsDict['UseCustomSHMPath'])
+        self.checkBoxSHMSize.setChecked(self.advancedSettingsDict['SpecifySHMSize'])
+        self.checkBoxHostSocket.setChecked(self.advancedSettingsDict['SpecifySpiceHost'])
+        self.checkBoxSpicePort.setChecked(self.advancedSettingsDict['SpecifySpiceSocket'])
+
+        self.LGPathLineEdit.setText(self.advancedSettingsDict['LookingGlassConfigPath'])
+        self.SHMPathLineEdit.setText(self.advancedSettingsDict['SHMPath'])
+        self.memsizeSpinBox.setValue(int(self.advancedSettingsDict['SHMSize']))
+        self.socketLineEdit.setText(self.advancedSettingsDict['SpiceHost'])
+        self.portSpinBox.setValue(int(self.advancedSettingsDict['SpicePort']))
+
+    def exitAdvancedOptions(self):
+        # also write the advanced options to the object.
+        print("Writing advanced options to dict")
+        self.advancedSettingsDict['UseCustomLookingGlassConfigFile'] = self.checkBoxLGPath.isChecked()
+        self.advancedSettingsDict['UseCustomSHMPath'] = self.checkBoxSHMPath.isChecked()
+        self.advancedSettingsDict['SpecifySHMSize'] = self.checkBoxSHMSize.isChecked()
+        self.advancedSettingsDict['SpecifySpiceHost'] = self.checkBoxHostSocket.isChecked()
+        self.advancedSettingsDict['SpecifySpiceSocket'] = self.checkBoxSpicePort.isChecked()
+
+        self.advancedSettingsDict['LookingGlassConfigPath'] = self.LGPathLineEdit.text()
+        self.advancedSettingsDict['SHMPath'] = self.SHMPathLineEdit.text()
+        self.advancedSettingsDict['SHMSize'] = self.memsizeSpinBox.text()
+        self.advancedSettingsDict['SpiceHost'] = self.socketLineEdit.text()
+        self.advancedSettingsDict['SpicePort'] = self.portSpinBox.value()
+        self.hide()
+
+
 class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
 
     ICON_GREEN_LED = 'green-led.png'
@@ -183,7 +226,7 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
 
         advanced.ui.LGPathLineEdit.setText(self.advancedSettingsDict['LookingGlassConfigPath'])
         advanced.ui.SHMPathLineEdit.setText(self.advancedSettingsDict['SHMPath'])
-        advanced.ui.memsizeSpinBox.setValue(self.advancedSettingsDict['SHMSize'])
+        advanced.ui.memsizeSpinBox.setValue(int(self.advancedSettingsDict['SHMSize']))
         advanced.ui.socketLineEdit.setText(self.advancedSettingsDict['SpiceHost'])
         advanced.ui.portSpinBox.setValue(int(self.advancedSettingsDict['SpicePort']))
 
@@ -305,16 +348,62 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
 
     def showAdvancedOptions(self):
         print("Showing advanced options")
+        dialog = AdvancedOptions(self.advancedSettingsDict)
+        """
         advancedOptions = QtWidgets.QDialog()
         advancedOptions.ui = advancedmenu.Ui_Dialog()
         advancedOptions.ui.setupUi(advancedOptions)
-        advancedOptions.ui.buttonOkay.clicked.connect(advancedOptions.hide)
-        advancedOptions.ui.buttonCancel.clicked.connect(advancedOptions.hide)
-        self.populateAdvancedFromDict(advancedOptions) # populates options from dict
+        #advancedOptions.ui.buttonOkay.clicked.connect(advancedOptions.hide)
+        #advancedOptions.ui.buttonCancel.clicked.connect(advancedOptions.hide)
+        #self.advancedOptions = advancedOptions
+        #advancedOptions.ui.buttonOkay.clicked.connect(self.exitAdvancedOptions)
+        #advancedOptions.ui.buttonCancel.clicked.connect(self.exitAdvancedOptions)
+        advancedOptions.ui.buttonOkay.clicked.connect(lambda: self.exitAdvancedOptions(advancedOptions))
+        advancedOptions.ui.buttonCancel.clicked.connect(lambda: self.exitAdvancedOptions(advancedOptions))
+        print("Connected to function")
+        self.populateAdvancedFromDict(advancedOptions)  # populates options from dict
         advancedOptions.exec_()
+        print("executed")
         advancedOptions.show()
+        print("SHown")
+        #self.advancedOptions = advancedOptions
+        """
 
+    def exitAdvancedOptions(self, advancedOptions):
+        # also write the advanced options to the object.
+        print("Writing advanced options to dict")
+        self.advancedSettingsDict['UseCustomLookingGlassConfigFile'] = advancedOptions.ui.checkBoxLGPath.isChecked()
+        self.advancedSettingsDict['UseCustomSHMPath'] = advancedOptions.ui.checkBoxSHMPath.isChecked()
+        self.advancedSettingsDict['SpecifySHMSize'] = advancedOptions.ui.checkBoxSHMSize.isChecked()
+        self.advancedSettingsDict['SpecifySpiceHost'] = advancedOptions.ui.checkBoxHostSocket.isChecked()
+        self.advancedSettingsDict['SpecifySpiceSocket'] = advancedOptions.ui.checkBoxSpicePort.isChecked()
 
+        self.advancedSettingsDict['LookingGlassConfigPath'] = advancedOptions.ui.LGPathLineEdit.text()
+        self.advancedSettingsDict['SHMPath'] = advancedOptions.ui.SHMPathLineEdit.text()
+        self.advancedSettingsDict['SHMSize'] = advancedOptions.ui.memsizeSpinBox.text()
+        self.advancedSettingsDict['SpiceHost'] = advancedOptions.ui.socketLineEdit.text()
+        self.advancedSettingsDict['SpicePort'] = advancedOptions.ui.portSpinBox.value()
+        """
+        self.advancedSettingsDict['UseCustomLookingGlassConfigFile'] = self.advancedOptions.ui.checkBoxLGPath.isChecked()
+        self.advancedSettingsDict['UseCustomSHMPath'] = self.advancedOptions.ui.checkBoxSHMPath.isChecked()
+        self.advancedSettingsDict['SpecifySHMSize'] = self.advancedOptions.ui.checkBoxSHMSize.isChecked()
+        self.advancedSettingsDict['SpecifySpiceHost'] = self.advancedOptions.ui.checkBoxHostSocket.isChecked()
+        self.advancedSettingsDict['SpecifySpiceSocket'] = self.advancedOptions.ui.checkBoxSpicePort.isChecked()
+
+        self.advancedSettingsDict['LookingGlassConfigPath'] = self.advancedOptions.ui.LGPathLineEdit.text()
+        self.advancedSettingsDict['SHMPath'] = self.advancedOptions.ui.SHMPathLineEdit.text()
+        self.advancedSettingsDict['SHMSize'] = self.advancedOptions.ui.memsizeSpinBox.text()
+        self.advancedSettingsDict['SpiceHost'] = self.advancedOptions.ui.socketLineEdit.text()
+        self.advancedSettingsDict['SpicePort'] = self.advancedOptions.ui.portSpinBox.value()
+        """
+        advancedOptions.hide()
+        advancedOptions.close()
+        print("should be Closed")
+        advancedOptions.destroy()
+        #sys.exit(advancedOptions.exec_())
+        print("CLosed ", advancedOptions)
+        #self.advancedOptions.close()
+        #self.advancedOptions.hide()
 
     def showLicense(self):
         print("showing license")
