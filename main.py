@@ -91,11 +91,7 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
         self.actionExit.triggered.connect(QtCore.QCoreApplication.quit) # Proper way to quit
         self.actionAbout.triggered.connect(self.showLicense)  # show license
         self.actionAdvanced_Options.triggered.connect(self.showAdvancedOptions)
-        #self.graphicsView.setPix
         self.labelStatus.setPixmap(QtGui.QPixmap(self.ICON_RED_LED))
-        #self.labelStatus.setGeometry(QtCore.QRect(10,10,100,100))
-        #self.labelStatus.setScaledContents(True)
-        #self.labelStatus.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.lookingGlassProcess = QtCore.QProcess()
         self.lookingGlassProcess.finished.connect(self.updateLCD)
 
@@ -108,7 +104,6 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
         print("Writing to config")
         self.writeConfigToFile()
         print("Deleting self")
-        # restore stdout
         sys.stdout = sys.__stdout__
         # kill LG subprocess / or does it kill itself?
         #self.lookingGlassProcess.kill()
@@ -138,6 +133,10 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
         config['CHECKBOX']['BorderlessMode'] = str(self.checkBoxBorderlessMode.isChecked())
         config['CHECKBOX']['BorderlessFullscreenMode'] = str(self.checkBoxBorderlessFullscreen.isChecked())
         config['CHECKBOX']['IgnoreRequestsToQuit'] = str(self.checkBoxIgnoreQuitRequests.isChecked())
+        config['CHECKBOX']['EnableMipmapping'] = str(self.checkBoxMipMap.isChecked())
+        config['CHECKBOX']['EnableVsync'] = str(self.checkBoxVsync.isChecked())
+        config['CHECKBOX']['PreventBuffer'] = str(self.checkBoxPreventBuffer.isChecked())
+        config['CHECKBOX']['AMDPinnedMem'] = str(self.checkBoxGLAMD.isChecked())
 
         config['CHECKBOX']['SetFPSLimit'] = str(self.checkBoxFPSLimit.isChecked())
         config['CHECKBOX']['SetInitialXpos'] = str(self.checkBoxXpos.isChecked())
@@ -151,8 +150,6 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
         config['NUMBER']['InitialWidth'] = str(self.spinBoxWidth.value())
         config['NUMBER']['InitialHeight'] = str(self.spinBoxHeight.value())
 
-
-        # TODO actually save these properly
         config['ADVANCED']['UseCustomLookingGlassConfigFile'] = str(self.advancedSettingsDict['UseCustomLookingGlassConfigFile'])
         config['ADVANCED']['UseCustomSHMPath'] = str(self.advancedSettingsDict['UseCustomSHMPath'])
         config['ADVANCED']['SpecifySHMSize'] = str(self.advancedSettingsDict['SpecifySHMSize'])
@@ -187,6 +184,10 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
         self.checkBoxBorderlessMode.setChecked(config['CHECKBOX'].getboolean('BorderlessMode'))
         self.checkBoxBorderlessFullscreen.setChecked(config['CHECKBOX'].getboolean('BorderlessFullscreenMode'))
         self.checkBoxIgnoreQuitRequests.setChecked(config['CHECKBOX'].getboolean('IgnoreRequestsToQuit'))
+        self.checkBoxMipMap.setChecked(config['CHECKBOX'].getboolean('EnableMipmapping'))
+        self.checkBoxVsync.setChecked(config['CHECKBOX'].getboolean('EnableVsync'))
+        self.checkBoxPreventBuffer.setChecked(config['CHECKBOX'].getboolean('PreventBuffer'))
+        self.checkBoxGLAMD.setChecked(config['CHECKBOX'].getboolean('AMDPinnedMem'))
 
         # Checkboxes for Basic other basic settings
         self.checkBoxFPSLimit.setChecked(config['CHECKBOX'].getboolean('SetFPSLimit'))
@@ -255,6 +256,35 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
             checkBoxOptions.append('-Q')
         if(self.checkBoxManualResize.isChecked()):
             checkBoxOptions.append('-n')
+
+        #slightly more complicated checks and options
+        if(self.checkBoxMipMap.isChecked()):
+            checkBoxOptions.append('-o')
+            checkBoxOptions.append('opengl:mipmap=1')
+        else:
+            checkBoxOptions.append('-o')
+            checkBoxOptions.append('opengl:mipmap=0')
+
+        if(self.checkBoxVsync.isChecked()):
+            checkBoxOptions.append('-o')
+            checkBoxOptions.append('opengl:vsync=1')
+        else:
+            checkBoxOptions.append('-o')
+            checkBoxOptions.append('opengl:vsync=0')
+
+        if (self.checkBoxPreventBuffer.isChecked()):
+            checkBoxOptions.append('-o')
+            checkBoxOptions.append('opengl:preventBuffer=1')
+        else:
+            checkBoxOptions.append('-o')
+            checkBoxOptions.append('opengl:preventBuffer=0')
+        if (self.checkBoxGLAMD.isChecked()):
+            checkBoxOptions.append('-o')
+            checkBoxOptions.append('opengl:amdPinnedMem=1')
+        else:
+            checkBoxOptions.append('-o')
+            checkBoxOptions.append('opengl:amdPinnedMem=0')
+
         print(checkBoxOptions)
         return checkBoxOptions
 
