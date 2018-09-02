@@ -1,38 +1,10 @@
 import results
 import about
 import advancedmenu
-from emittingstream import EmittingStream
 
 from PyQt5 import QtGui, QtCore, QtWidgets
 import sys
 import configparser
-
-options = [
-    'C',  # PATH    Specify an additional configuration file to load
-    'f',  # PATH    Specify the path to the shared memory file [current: /dev/shm/looking-glass]
-    'L',  # SIZE    Specify the size in MB of the shared memory file (0 = detect) [current: 0]
-    's',  #         Disable spice client
-    'c',  # HOST    Specify the spice host or UNIX socket [current: 127.0.0.1]
-    'p',  # PORT    Specify the spice port or 0 for UNIX socket [current: 5900]
-    'j',  #         Disable cursor position scaling
-    'M',  #         Don't hide the host cursor
-    'K',  #         Set the FPS limit [current: 200]
-    'k',  #         Enable FPS display
-    'g',  # NAME    Force the use of a specific renderer
-    'o',  # OPTION  Specify a renderer option (ie: opengl:vsync=0) Alternatively specify "list" to list all renderers and their options
-    'a',  #         Auto resize the window to the guest
-    'n',  #         Don't allow the window to be manually resized
-    'r',  #         Don't maintain the aspect ratio
-    'd',  #         Borderless mode
-    'F',  #         Borderless fullscreen mode
-    'x',  # XPOS    Initial window X position [current: center]
-    'y',  # YPOS    Initial window Y position [current: center]
-    'w',  # WIDTH   Initial window width [current: 1024]
-    'b',  # HEIGHT  Initial window height [current: 768]
-    'Q',  #         Ignore requests to quit (ie: Alt+F4)
-    'l',  #         License information
-
-]
 
 
 class AdvancedOptions(QtWidgets.QDialog, advancedmenu.Ui_Dialog):
@@ -81,6 +53,7 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
 
     ICON_GREEN_LED = 'green-led.png'
     ICON_RED_LED = 'red-led.png'
+    LG_LICENSE_FILE = 'lg-license.txt'
 
     def __init__(self, parent=None):
         super(MainApp, self).__init__(parent)
@@ -327,7 +300,6 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
     def startButton(self):
         startCommand = self.createCommand()
         startArguments = self.getOptions()
-        #print(startCommand)
         self.startSubprocess(startCommand)
 
 
@@ -343,23 +315,17 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
 
     def startSubprocess(self, startArguments):
         print('Starting Subprocess')
-        #print(startArguments)
         commandAsString = ' '.join(startArguments)
-        self.showCMDCommand(commandAsString)
+        self.showCMDCommand(commandAsString)  # display the full looking-glass-client command to the user
 
-        #print(type(self.lookingGlassProcess))
         # check if process never started, or if it has exited
         if(None == self.lookingGlassProcess or True):
-            #self.lookingGlassProcess = self.startSubprocess(startArguments)
             self.lookingGlassProcess = QtCore.QProcess()
             self.lookingGlassProcess.start(commandAsString)
-            self.lookingGlassProcess.readyReadStandardOutput.connect(self.stdoutReady)
-            self.lookingGlassProcess.readyReadStandardError.connect(self.stderrReady)
+            self.lookingGlassProcess.readyReadStandardOutput.connect(self.stdoutReady)  # redirect standard output
+            self.lookingGlassProcess.readyReadStandardError.connect(self.stderrReady)  # redirect errors
             self.lookingGlassProcess.finished.connect(self.updateLCD)
             self.labelStatus.setPixmap(QtGui.QPixmap(self.ICON_GREEN_LED))
-            #self.lcdNumber.display("1")
-            #self.lookingGlassProcess = subprocess.Popen(startArguments, stdout=subprocess.PIPE, shell=False)
-            #(self.out, self.err) = self.lookingGlassProcess.communicate()
 
     def subProcessForLicense(self):
         print("Getting license text")
@@ -383,61 +349,6 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
     def showAdvancedOptions(self):
         print("Showing advanced options")
         dialog = AdvancedOptions(self.advancedSettingsDict)
-        """
-        advancedOptions = QtWidgets.QDialog()
-        advancedOptions.ui = advancedmenu.Ui_Dialog()
-        advancedOptions.ui.setupUi(advancedOptions)
-        #advancedOptions.ui.buttonOkay.clicked.connect(advancedOptions.hide)
-        #advancedOptions.ui.buttonCancel.clicked.connect(advancedOptions.hide)
-        #self.advancedOptions = advancedOptions
-        #advancedOptions.ui.buttonOkay.clicked.connect(self.exitAdvancedOptions)
-        #advancedOptions.ui.buttonCancel.clicked.connect(self.exitAdvancedOptions)
-        advancedOptions.ui.buttonOkay.clicked.connect(lambda: self.exitAdvancedOptions(advancedOptions))
-        advancedOptions.ui.buttonCancel.clicked.connect(lambda: self.exitAdvancedOptions(advancedOptions))
-        print("Connected to function")
-        self.populateAdvancedFromDict(advancedOptions)  # populates options from dict
-        advancedOptions.exec_()
-        print("executed")
-        advancedOptions.show()
-        print("SHown")
-        #self.advancedOptions = advancedOptions
-        """
-
-    def exitAdvancedOptions(self, advancedOptions):
-        # also write the advanced options to the object.
-        print("Writing advanced options to dict")
-        self.advancedSettingsDict['UseCustomLookingGlassConfigFile'] = advancedOptions.ui.checkBoxLGPath.isChecked()
-        self.advancedSettingsDict['UseCustomSHMPath'] = advancedOptions.ui.checkBoxSHMPath.isChecked()
-        self.advancedSettingsDict['SpecifySHMSize'] = advancedOptions.ui.checkBoxSHMSize.isChecked()
-        self.advancedSettingsDict['SpecifySpiceHost'] = advancedOptions.ui.checkBoxHostSocket.isChecked()
-        self.advancedSettingsDict['SpecifySpiceSocket'] = advancedOptions.ui.checkBoxSpicePort.isChecked()
-
-        self.advancedSettingsDict['LookingGlassConfigPath'] = advancedOptions.ui.LGPathLineEdit.text()
-        self.advancedSettingsDict['SHMPath'] = advancedOptions.ui.SHMPathLineEdit.text()
-        self.advancedSettingsDict['SHMSize'] = advancedOptions.ui.memsizeSpinBox.text()
-        self.advancedSettingsDict['SpiceHost'] = advancedOptions.ui.socketLineEdit.text()
-        self.advancedSettingsDict['SpicePort'] = advancedOptions.ui.portSpinBox.value()
-        """
-        self.advancedSettingsDict['UseCustomLookingGlassConfigFile'] = self.advancedOptions.ui.checkBoxLGPath.isChecked()
-        self.advancedSettingsDict['UseCustomSHMPath'] = self.advancedOptions.ui.checkBoxSHMPath.isChecked()
-        self.advancedSettingsDict['SpecifySHMSize'] = self.advancedOptions.ui.checkBoxSHMSize.isChecked()
-        self.advancedSettingsDict['SpecifySpiceHost'] = self.advancedOptions.ui.checkBoxHostSocket.isChecked()
-        self.advancedSettingsDict['SpecifySpiceSocket'] = self.advancedOptions.ui.checkBoxSpicePort.isChecked()
-
-        self.advancedSettingsDict['LookingGlassConfigPath'] = self.advancedOptions.ui.LGPathLineEdit.text()
-        self.advancedSettingsDict['SHMPath'] = self.advancedOptions.ui.SHMPathLineEdit.text()
-        self.advancedSettingsDict['SHMSize'] = self.advancedOptions.ui.memsizeSpinBox.text()
-        self.advancedSettingsDict['SpiceHost'] = self.advancedOptions.ui.socketLineEdit.text()
-        self.advancedSettingsDict['SpicePort'] = self.advancedOptions.ui.portSpinBox.value()
-        """
-        advancedOptions.hide()
-        advancedOptions.close()
-        print("should be Closed")
-        advancedOptions.destroy()
-        #sys.exit(advancedOptions.exec_())
-        print("CLosed ", advancedOptions)
-        #self.advancedOptions.close()
-        #self.advancedOptions.hide()
 
     def showLicense(self):
         print("showing license")
@@ -446,6 +357,8 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
         showLicense.ui.setupUi(showLicense)
         showLicense.ui.buttonOkay.clicked.connect(showLicense.hide)
         showLicense.setWindowTitle("About looking-glass-client")
+        text = open(self.LG_LICENSE_FILE, 'r').read()
+        showLicense.ui.textBrowser.setText(text)
         showLicense.exec_()
         showLicense.show()
 
