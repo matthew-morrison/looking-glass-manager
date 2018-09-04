@@ -21,4 +21,4 @@ I learned how to use the QT5 framework, use ini files for the first time, and ho
 
 ![alt text][sample screenshot]
 
-[sample screenshot]: https://github.com/matthew-morrison/looking-glass-manager/looking-glass-manager-window.png "LG Manager Window"
+[sample screenshot]: https://raw.githubusercontent.com/matthew-morrison/looking-glass-manager/master/looking-glass-manager-window.png "LG Manager Window"
