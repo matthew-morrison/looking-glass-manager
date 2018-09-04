@@ -17,3 +17,8 @@ I personally found trying different settings to be very tedious for LG, and want
 Looking Glass Manager GUI is a way to easily change settings and restart the LG application.
 
 I learned how to use the QT5 framework, use ini files for the first time, and how to control processes from the QT5 GUI and from Python scripts in general.
+
+
+![alt text][sample screenshot]
+
+[sample screenshot]: https://github.com/matthew-morrison/looking-glass-manager/looking-glass-manager-window.png
