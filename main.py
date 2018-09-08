@@ -54,6 +54,8 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
     ICON_GREEN_LED = 'green-led.png'
     ICON_RED_LED = 'red-led.png'
     LG_LICENSE_FILE = 'lg-license.txt'
+    APPLICATION_ICON = 'looking_glass_manager_logo_unfilled.png'
+
 
     def __init__(self, parent=None):
         super(MainApp, self).__init__(parent)
@@ -67,6 +69,7 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
         self.labelStatus.setPixmap(QtGui.QPixmap(self.ICON_RED_LED))
         self.lookingGlassProcess = QtCore.QProcess()
         self.lookingGlassProcess.finished.connect(self.updateLCD)
+        self.setWindowIcon(QtGui.QIcon(QtGui.QPixmap(self.APPLICATION_ICON)))
 
         #sys.stdout = EmittingStream(textWritten=self.appendToTextBox()) # ignore Pycharm's error
 
