@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import results
 import about
 import advancedmenu

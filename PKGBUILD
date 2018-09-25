@@ -18,5 +18,5 @@ package() {
     mkdir -p "${pkgdir}/opt"
     cp -r looking-glass-manager "${pkgdir}/opt"
     mkdir -p "${pkgdir}/usr/local/bin"
-    ln -s "${pkgdir}/opt/looking-glass-manager/looking-glass-manager.sh" "${pkgdir}/usr/local/bin/looking-glass-manager.sh"
+    ln -s "${pkgdir}/opt/looking-glass-manager/looking-glass-manager.py" "${pkgdir}/usr/local/bin/looking-glass-manager.py"
 }
