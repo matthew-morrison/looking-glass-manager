@@ -100,6 +100,7 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
     # so necessary, yet so awful. What's the point of a config file if it doesn't keep values updated for you?
     def writeConfigToFile(self):
         config = configparser.ConfigParser()
+        config.optionxform = str
         config.read('settings.ini')
         config['CHECKBOX']['DisableSpiceClient'] = str(self.checkBoxSpiceClient.isChecked())
         config['CHECKBOX']['DisableCursorPositionScaling'] = str(self.checkBoxCursorPositionScaling.isChecked())
