@@ -5,6 +5,7 @@ import about
 import advancedmenu
 
 from PyQt5 import QtGui, QtCore, QtWidgets
+from PyQt5.QtWidgets import QFileDialog
 import sys
 import configparser
 
@@ -17,6 +18,8 @@ class AdvancedOptions(QtWidgets.QDialog, advancedmenu.Ui_Dialog):
         self.advancedSettingsDict = advancedSettingsDict
         self.buttonOkay.clicked.connect(self.exitAdvancedOptions)
         self.buttonCancel.clicked.connect(self.exitAdvancedOptions)
+        self.buttonLGConfig.clicked.connect(self.openFileExplorerLG)
+        self.buttonSHMPath.clicked.connect(self.openFileExplorerSHM)
         self.populateAdvancedFromDict()  # populates options from dict
         self.exec_()
         self.show()
@@ -49,6 +52,22 @@ class AdvancedOptions(QtWidgets.QDialog, advancedmenu.Ui_Dialog):
         self.advancedSettingsDict['SpiceHost'] = self.socketLineEdit.text()
         self.advancedSettingsDict['SpicePort'] = self.portSpinBox.value()
         self.hide()
+
+
+    ## Code bloat because the button connect function is just weird like that
+    def openFileExplorerSHM(self):
+        options = QFileDialog.Options()
+        fileName, _ = QFileDialog.getOpenFileName(self, "LG SHM File", "", "All Files (*)", options=options)
+        if fileName:
+            print(fileName)
+            self.SHMPathLineEdit.setText(fileName)
+
+    def openFileExplorerLG(self):
+        options = QFileDialog.Options()
+        fileName, _ = QFileDialog.getOpenFileName(self, "LG Custom Settings Path", "", "All Files (*)", options=options)
+        if fileName:
+            print(fileName)
+            self.LGPathLineEdit.setText(fileName)
 
 
 class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
