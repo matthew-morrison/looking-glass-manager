@@ -135,18 +135,23 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
         config['CHECKBOX']['EnableVsync'] = str(self.checkBoxVsync.isChecked())
         config['CHECKBOX']['PreventBuffer'] = str(self.checkBoxPreventBuffer.isChecked())
         config['CHECKBOX']['AMDPinnedMem'] = str(self.checkBoxGLAMD.isChecked())
+        config['CHECKBOX']['DisableScreensaver'] = str(self.checkBoxDisableScreensaver.isChecked())
+        config['CHECKBOX']['CaptureNoKeyboard'] = str(self.checkBoxNoKeyboardCap.isChecked())
+        config['CHECKBOX']['DisableAlertMessages'] = str(self.checkBoxDisableScreensaver.isChecked())
 
         config['CHECKBOX']['SetFPSLimit'] = str(self.checkBoxFPSLimit.isChecked())
         config['CHECKBOX']['SetInitialXpos'] = str(self.checkBoxXpos.isChecked())
         config['CHECKBOX']['SetInitialYpos'] = str(self.checkBoxYpos.isChecked())
         config['CHECKBOX']['SetInitialWidth'] = str(self.checkBoxWidth.isChecked())
         config['CHECKBOX']['SetInitialHeight'] = str(self.checkBoxHeight.isChecked())
+        config['CHECKBOX']['SpecifyCaptureKey'] = str(self.checkBoxCaptureKey.isChecked())
 
         config['NUMBER']['FPSLimit'] = str(self.spinBoxFPS.value())
         config['NUMBER']['InitialXpos'] = str(self.spinBoxXpos.value())
         config['NUMBER']['InitialYpos'] = str(self.spinBoxYpos.value())
         config['NUMBER']['InitialWidth'] = str(self.spinBoxWidth.value())
         config['NUMBER']['InitialHeight'] = str(self.spinBoxHeight.value())
+        config['NUMBER']['CaptureKey'] = str(self.lineEditCaptureKey.text())
 
         config['ADVANCED']['UseCustomLookingGlassConfigFile'] = str(self.advancedSettingsDict['UseCustomLookingGlassConfigFile'])
         config['ADVANCED']['UseCustomSHMPath'] = str(self.advancedSettingsDict['UseCustomSHMPath'])
@@ -186,6 +191,9 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
         self.checkBoxVsync.setChecked(config['CHECKBOX'].getboolean('EnableVsync'))
         self.checkBoxPreventBuffer.setChecked(config['CHECKBOX'].getboolean('PreventBuffer'))
         self.checkBoxGLAMD.setChecked(config['CHECKBOX'].getboolean('AMDPinnedMem'))
+        self.checkBoxDisableScreensaver.setChecked(config['CHECKBOX'].getboolean('DisableScreensaver'))
+        self.checkBoxNoKeyboardCap.setChecked(config['CHECKBOX'].getboolean('CaptureNoKeyboard'))
+        self.checkBoxDisableAlertMsgs.setChecked(config['CHECKBOX'].getboolean('DisableAlertMessages'))
 
         # Checkboxes for Basic other basic settings
         self.checkBoxFPSLimit.setChecked(config['CHECKBOX'].getboolean('SetFPSLimit'))
@@ -193,6 +201,7 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
         self.checkBoxYpos.setChecked(config['CHECKBOX'].getboolean('SetInitialYpos'))
         self.checkBoxWidth.setChecked(config['CHECKBOX'].getboolean('SetInitialWidth'))
         self.checkBoxHeight.setChecked(config['CHECKBOX'].getboolean('SetInitialHeight'))
+        self.checkBoxCaptureKey.setChecked(config['CHECKBOX'].getboolean('SpecifyCaptureKey'))
 
         # Set Number values for basic settings
         self.spinBoxFPS.setValue(config['NUMBER'].getint('FPSLimit'))
@@ -200,6 +209,7 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
         self.spinBoxYpos.setValue(config['NUMBER'].getint('InitialYpos'))
         self.spinBoxWidth.setValue(config['NUMBER'].getint('InitialWidth'))
         self.spinBoxHeight.setValue(config['NUMBER'].getint('InitialHeight'))
+        self.lineEditCaptureKey.setText(str(config['NUMBER'].getint('CaptureKey')))
 
         # Advanced Values
         self.advancedSettingsDict = dict()
@@ -231,7 +241,6 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
 
 
     #  get and return a list of all options that are checked
-    # there will be ten options
     def getCheckOptions(self):
         checkBoxOptions = []
         if(self.checkBoxEnableFPS.isChecked()):
@@ -283,6 +292,14 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
             checkBoxOptions.append('-o')
             checkBoxOptions.append('opengl:amdPinnedMem=0')
 
+        if self.checkBoxDisableScreensaver.isChecked():
+            checkBoxOptions.append('-S')
+        if self.checkBoxNoKeyboardCap.isChecked():
+            checkBoxOptions.append('-G')
+        if self.checkBoxDisableAlertMsgs.isChecked():
+            checkBoxOptions.append('-q')
+
+
         print(checkBoxOptions)
         return checkBoxOptions
 
@@ -304,6 +321,9 @@ class MainApp(QtWidgets.QMainWindow, results.Ui_MainWindow):
         if(self.checkBoxFPSLimit.isChecked()):
             fpsLimit = self.spinBoxFPS.value()
             checkNumOptions.append('-K ' + str(fpsLimit))
+        if self.checkBoxCaptureKey.isChecked():
+            captureKey = self.lineEditCaptureKey.text()
+            checkNumOptions.append('-m ' + captureKey)
         return checkNumOptions
 
     # yes. this won't be implemented yet.
